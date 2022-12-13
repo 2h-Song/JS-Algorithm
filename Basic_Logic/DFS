@@ -1,0 +1,41 @@
+const robotPath = function (room, src, dst) {
+  // DFS BFS 
+  // 둘다 가능하지만 최단 시간은 BFS 
+
+  let visited = Array(room.length).fill(0).map(()=> Array()); 
+  let queue = [[...src,1]]; // 시작지점인 src와 cnt값인 1을 지정해준다 즉 스타트 값
+  let direction = [ 
+    [0,1], 
+    [0,-1], 
+    [1,0], 
+    [-1,0] 
+    ]; // 상하좌우 
+  
+  let nx = room[0].length -1; // room x축 이동 
+  let ny = room.length -1; // room y축 이동
+
+  while(queue.length) { //
+    let result = queue.shift(); // 반복문을 통해 queue에 앞에서 하나씩 빼서 탐색 
+    let [y,x, cnt] = result; 
+    
+    for(let i=0; i<4; i++){ 
+      let nextX = x + direction[i][1]; // y 축 이동값
+      let nextY = y + direction[i][0]; // x 축 이동값 
+
+      if( nextX < 0 || nextY <0 || nextX > nx || nextY > ny) continue;
+      // nextX < 0 or nextY < 0 or nextX > nx or nextY > ny 이 의미가 무엇? 
+      // 
+      if(room[nextY][nextX]===1) continue;
+      // 장애물인 1을 만났을 때
+      if(visited[nextY][nextX]) continue;
+      visited[nextY][nextX] = 1;
+      // 한번 방문한 곳은 1로 바꾸어주어서 다시 방문하지 않도록
+      queue.push([nextY, nextX, cnt + 1]); 
+      // 방문한곳의 좌표와 카운트를 추가해준다. 
+      if(nextY === dst[0] && nextX === dst[1]) return result[2];
+      // dst[y,x] 가 nextX,Y좌표와 일치하면 result[2] 는 cnt 이니까
+      // 다음 좌표가 dst의 좌표가 같으면 cnt값 반환해야함 
+    }
+  }
+
+}
